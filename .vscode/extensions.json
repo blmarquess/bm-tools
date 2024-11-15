@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "oven.bun-vscode",
+    "dotenv.dotenv-vscode",
+    "usernamehw.errorlens",
+    "dbaeumer.vscode-eslint",
+    "nhoizey.gremlins",
+    "esbenp.prettier-vscode",
+    "gruntfuggly.todo-tree"
+  ]
+}
