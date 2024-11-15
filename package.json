@@ -1,0 +1,22 @@
+{
+  "name": "bm-cli",
+  "module": "index.ts",
+  "type": "module",
+  "bin": {
+    "bm": "./index.ts"
+  },
+  "scripts": {
+    "start": "bun run index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/yargs": "^17.0.33"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "openai": "^4.71.0",
+    "yargs": "^17.7.2"
+  }
+}
