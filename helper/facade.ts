@@ -6,7 +6,7 @@ export const OpenAiInstance = new OpenAI({
   project: process.env.PROJECT_ID,
 })
 
-export async function openApiRestSDK(content: string, model: string = 'gpt-3.5-turbo') {
+export async function openApiChatSDK(content: string, model: string = 'gpt-3.5-turbo') {
   const start = performance.now()
   const stream = await OpenAiInstance.chat.completions.create({
     model: 'gpt-3.5-turbo',
