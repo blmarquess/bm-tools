@@ -8,6 +8,7 @@ export async function commit(exec: boolean = false): Promise<string> {
   const stagedDiff = await $`git diff --cached`.text()
 
   if (!stagedDiff) {
+    console.log(`❗❗❗ ${ADD_FILE_CHANGES_DIFF}❗❗❗`)
     return ADD_FILE_CHANGES_DIFF
   }
 
@@ -26,6 +27,7 @@ export async function commit(exec: boolean = false): Promise<string> {
   if (!commitMessage || commitMessage === NOT_COMMIT) {
     return NOT_COMMIT
   }
+
   if (exec) {
     const apply = await $`git commit -m "${commitMessage}"`.text()
     console.log('🚀 ~ commit ~ apply:', apply)
