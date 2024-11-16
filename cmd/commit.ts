@@ -64,10 +64,9 @@ async function handleSingleCommit(llmResponse: any, exec: boolean) {
 
 async function handleMultiCommit(llmResponse: any, exec: boolean) {
   const commitMessage = unwrapAiResponse(llmResponse)
-  clipboard.writeSync(JSON.stringify(commitMessage))
-  console.log('🚀 :: This response has clipboard:', commitMessage)
-
   const { success, data } = JSON.parse(fixJsonString(commitMessage))
+  clipboard.writeSync(JSON.stringify(data))
+  console.log('🚀 :: This response has clipboard:', commitMessage)
 
   if (!success) {
     console.log('🚧 Response:', commitMessage)
