@@ -8,15 +8,25 @@ yargs(hideBin(process.argv))
     ['commit', 'c'],
     'Gera uma mensagem de commit',
     (yargs) => {
-      yargs.option('y', {
-        alias: 'yes',
-        type: 'boolean',
-        description: 'Executa a ação automaticamente',
-      })
+      yargs
+        .option('y', {
+          alias: 'yes',
+          type: 'boolean',
+          description: 'Executa a ação automaticamente',
+          default: false,
+        })
+        .option('m', {
+          alias: 'multi',
+          type: 'boolean',
+          description: 'Tipo de commit multi',
+          default: false,
+        })
     },
     async (argv) => {
-      const option: boolean = (argv?.y as boolean) ?? false
-      await commit(option)
+      const exec: boolean = (argv?.y as boolean) ?? false
+      const type = (argv?.multi as boolean) ? 'multi' : 'single'
+      const execMultiCommit = { exec, type }
+      await commit({ exec, type })
     },
   )
   .help()
