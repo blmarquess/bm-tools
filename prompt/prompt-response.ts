@@ -4,6 +4,5 @@ export interface PromptOutput<T = string> {
 }
 export interface CommitAiOutput {
   files: string[]
-  cmd: string
   message: string
 }
