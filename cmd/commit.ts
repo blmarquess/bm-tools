@@ -7,6 +7,7 @@ import {
   COMMIT_RESPONSE_ROLE_FOR_SINGLE_COMMIT,
 } from '../prompt'
 import clipboard from 'clipboardy'
+import { jsonSafeParse } from '../util'
 import type { CommitAiOutput, PromptOutput } from '../prompt/prompt-response'
 
 export type commitProps = {
@@ -28,7 +29,6 @@ export async function commit({ exec = false, type = 'single' }: commitProps): Pr
   ${isMultiCommit ? COMMIT_RESPONSE_ROLE_FOR_MULTI_COMMITS : COMMIT_RESPONSE_ROLE_FOR_SINGLE_COMMIT}
   ${stagedDiff},
   `
-
   const llmResponse = await OpenAiInstance.chat.completions.create({
     model: 'gpt-3.5-turbo',
     messages: [{ role: 'user', content: PROMPT }],
@@ -64,7 +64,7 @@ async function handleSingleCommit(llmResponse: any, exec: boolean) {
 
 async function handleMultiCommit(llmResponse: any, exec: boolean) {
   const commitMessage = unwrapAiResponse(llmResponse)
-  const { success, data } = JSON.parse(fixJsonString(commitMessage))
+  const { success, data } = jsonSafeParse<PromptOutput<CommitAiOutput[]>>(commitMessage)
   clipboard.writeSync(JSON.stringify(data))
   console.log('🚀 :: This response has clipboard:', commitMessage)
 
@@ -85,4 +85,15 @@ async function handleMultiCommit(llmResponse: any, exec: boolean) {
 
 function fixJsonString(input: string) {
   return input.replace('```json', '').replace('```', '').replace(/'/g, '"')
+}
+
+function safeJsonParse<T>(input: string): T | undefined {
+  try {
+    const str = input.replace('```json', '').replace('```', '')
+    const jsonValue: T = JSON.parse(str)
+
+    return jsonValue
+  } catch {
+    return undefined
+  }
 }
