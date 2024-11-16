@@ -7,6 +7,7 @@ import {
   COMMIT_RESPONSE_ROLE_FOR_SINGLE_COMMIT,
 } from '../prompt'
 import clipboard from 'clipboardy'
+import type { CommitAiOutput, PromptOutput } from '../prompt/prompt-response'
 
 export type commitProps = {
   exec: boolean
@@ -35,8 +36,6 @@ export async function commit({ exec = false, type = 'single' }: commitProps): Pr
   })
   const responseText = JSON.stringify(llmResponse, null, 2)
   console.log('🚀 ~ commit ~ llmResponse:', responseText)
-  clipboard.writeSync(responseText)
-
   if (isMultiCommit) {
     const commitMessage = await handleMultiCommit(llmResponse, exec)
     return commitMessage
@@ -58,12 +57,36 @@ async function handleSingleCommit(llmResponse: any, exec: boolean) {
     return apply
   }
 
-  console.log('🚀 ~ commit ~ commitMessage:', commitMessage)
+  console.log('🚀 :: This message has copy to clipboard:', commitMessage)
+  clipboard.writeSync(commitMessage)
   return commitMessage
 }
 
 async function handleMultiCommit(llmResponse: any, exec: boolean) {
   const commitMessage = unwrapAiResponse(llmResponse)
-  console.log('🚀 ~ handleMultiCommit ~ commitMessage:', commitMessage)
+  clipboard.writeSync(JSON.stringify(commitMessage))
+  console.log('🚀 :: This response has clipboard:', commitMessage)
+
+  const { success, data } = JSON.parse(fixJsonString(commitMessage))
+
+  if (!success) {
+    console.log('🚧 Response:', commitMessage)
+    return COMMIT_RESPONSE_ROLE_ERROR
+  }
+
+  if (exec) {
+    for await (const { files, message } of data) {
+      await $`git add ${files}"`
+      const apply = await $`git commit -m "${message}"`.text()
+      console.log('🚀 ~ GIT::commit', apply)
+    }
+  }
   return commitMessage
+}
+
+function fixJsonString(input: string) {
+  return input.replace('```json', '').replace('```', '')
+  // return input
+  //   .replace(/([\s{,])(\w+):/g, '$1"$2":') // Adiciona aspas duplas em chaves sem aspas
+  //   .replace(/'/g, '"') // Substitui aspas simples por aspas duplas
 }
