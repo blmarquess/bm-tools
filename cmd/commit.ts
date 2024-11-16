@@ -65,7 +65,7 @@ async function handleSingleCommit(llmResponse: any, exec: boolean) {
 async function handleMultiCommit(llmResponse: any, exec: boolean) {
   const commitMessage = unwrapAiResponse(llmResponse)
   const { success, data } = jsonSafeParse<PromptOutput<CommitAiOutput[]>>(commitMessage)
-  clipboard.writeSync(JSON.stringify(data))
+  clipboard.writeSync(JSON.stringify(commitMessage))
   console.log('🚀 :: This response has clipboard:', commitMessage)
 
   if (!success) {
