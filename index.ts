@@ -25,7 +25,6 @@ yargs(hideBin(process.argv))
     async (argv) => {
       const exec: boolean = (argv?.y as boolean) ?? false
       const type = (argv?.multi as boolean) ? 'multi' : 'single'
-      const execMultiCommit = { exec, type }
       await commit({ exec, type })
     },
   )
