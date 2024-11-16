@@ -85,8 +85,11 @@ async function handleMultiCommit(llmResponse: any, exec: boolean) {
 }
 
 function fixJsonString(input: string) {
-  return input.replace('```json', '').replace('```', '')
-  // return input
-  //   .replace(/([\s{,])(\w+):/g, '$1"$2":') // Adiciona aspas duplas em chaves sem aspas
-  //   .replace(/'/g, '"') // Substitui aspas simples por aspas duplas
+  return (
+    input
+      .replace('```json', '')
+      .replace('```', '')
+      // .replace(/([\s{,])(\w+):/g, '$1"$2":') // Adiciona aspas duplas em chaves sem aspas
+      .replace(/'/g, '"')
+  ) // Substitui aspas simples por aspas duplas
 }
