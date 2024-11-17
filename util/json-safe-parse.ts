@@ -1,6 +1,9 @@
-export function jsonSafeParse<T = any>(inputString: string): T {
+import type { CommitAiOutput, PromptOutput } from '../prompt/prompt-response'
+
+export function jsonSafeParse<T = PromptOutput<CommitAiOutput[]>>(inputString: string): T {
   try {
-    return JSON.parse(inputString)
+    const obj: T = JSON.parse(inputString)
+    return obj
   } catch (error: any) {
     try {
       let sanitizedString = inputString
@@ -22,6 +25,7 @@ export function jsonSafeParse<T = any>(inputString: string): T {
 
       return JSON.parse(sanitizedString)
     } catch (finalError: any) {
+      console.error(finalError)
       throw new Error(
         `Failed to parse JSON string. Original Error: ${error.message}, Correction Error: ${finalError.message}`,
       )
