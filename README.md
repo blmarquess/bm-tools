@@ -18,8 +18,7 @@
 
 2. **Required Environment Variables**:
    To use OpenAI integration, the following environment variables must be configured:
-   - `OPENAI_API_ORG_ID`: Your OpenAI organization ID.
-   - `OPENAI_API_PROJECT_ID`: Your OpenAI project ID.
+   - `OPENAI_API_KEY`: Your OpenAI API Key.
 
    You can find these details on the [OpenAI API Keys page](https://platform.openai.com/account/api-keys).
 
