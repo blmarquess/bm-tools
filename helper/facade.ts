@@ -2,8 +2,8 @@ import OpenAI from 'openai'
 import type { ChatCompletion } from 'openai/resources/index.mjs'
 
 export const OpenAiInstance = new OpenAI({
-  organization: process.env.ORG_ID,
-  project: process.env.PROJECT_ID,
+  organization: process.env.OPENAI_API_ORG_ID,
+  project: process.env.OPENAI_API_PROJECT_ID,
 })
 
 export async function openApiChatSDK(content: string, model: string = 'gpt-3.5-turbo') {
