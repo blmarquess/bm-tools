@@ -47,9 +47,9 @@ You MUST respond with exactly one of the following:
 response type json with a list of commit messages and files list:
 interface CommitAiOutput { files: string; message: string; }
 interface PromptOutput { success: boolean; data: CommitAiOutput; }
+Always response with a valid json format. the data exactly like interface PromptOutput!
 
 Commit list:
-
 Exemple:
 {
   success: true,
