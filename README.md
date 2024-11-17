@@ -1,24 +1,144 @@
-# bm-cli
+# BM Tools CLI
 
-To install dependencies:
+**BM Tools** is a CLI built with JavaScript using the `Bun` runtime. It streamlines automated tasks with OpenAI integration, designed for development teams.
 
-```bash
-bun install
+---
+
+## Prerequisites
+
+1. **Install Bun Runtime**:
+   - The `Bun` runtime is required to run this CLI. Install it using the following command:
+     ```bash
+     curl -fsSL https://bun.sh/install | bash
+     ```
+   - After installation, ensure `bun` is properly configured:
+     ```bash
+     bun --version
+     ```
+
+2. **Required Environment Variables**:
+   To use OpenAI integration, the following environment variables must be configured:
+   - `OPENAI_API_ORG_ID`: Your OpenAI organization ID.
+   - `OPENAI_API_PROJECT_ID`: Your OpenAI project ID.
+
+   You can find these details on the [OpenAI API Keys page](https://platform.openai.com/account/api-keys).
+
+3. **OpenAI Credits**:
+   - Active OpenAI credits are required to use the API. Ensure your account is set up with a valid plan.
+
+---
+
+## Installation
+
+### **Option 1: Install with Bun**
+
+1. Add the CLI using the following command:
+   ```bash
+   bun add -g github:blmarquess/bm-tools
+   ```
+
+2. Verify the installation:
+   ```bash
+   bm--help
+   ```
+
+---
+
+### **Option 2: Clone the Repository**
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/blmarquess/bm-tools.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd bm-tools
+   ```
+
+3. Link the CLI to your system:
+   ```bash
+   bun link
+   ```
+
+4. Test the CLI:
+   ```bash
+   bm-tools --help
+   ```
+
+---
+
+## Setting Up Environment Variables
+
+Make sure to set the required environment variables. For example, using a `.env` file:
+
+```plaintext
+OPENAI_API_ORG_ID=your_openai_org_id
+OPENAI_API_PROJECT_ID=your_openai_project_id
 ```
 
-To run:
-
+Or set them directly in the terminal:
 ```bash
-bun run index.ts
+export OPENAI_API_ORG_ID=your_openai_org_id
+export OPENAI_API_PROJECT_ID=your_openai_project_id
 ```
 
-This project was created using `bun init` in bun v1.1.28. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+---
 
+## Available Commands
 
-bm c or bm commit generate a commit from git cached changes and copy to clipboard
+### `bm c` or `bm commit`
+- **Description**: Generates a commit message from the Git staged (cached) changes.
+- **Usage**:
+  - Without arguments: Copies the commit message to the clipboard.
+    ```bash
+    bm c
+    ```
+  - With `-y`: Generates and directly commits the changes.
+    ```bash
+    bm c -y
+    ```
 
-bm c or bm commit -y generate a commit from git cached changes and execute it
+### `bm c -m` or `bm commit -m`
+- **Description**: Generates a commit message from all Git changes (staged and unstaged).
+- **Usage**:
+  - Without arguments: Copies the commit message to the clipboard.
+    ```bash
+    bm c -m
+    ```
+  - With `-y`: Generates and directly commits the changes.
+    ```bash
+    bm c -m -y
+    ```
 
-bm c -m or bm commit -m generate a commit from all git changes and copy to clipboard
+---
 
-bm c -m or bm commit -m -y generate a commit from all git changes and execute it
+## Usage Examples
+
+1. Generate a commit message for staged changes and copy it to the clipboard:
+   ```bash
+   bm c
+   ```
+
+2. Generate a commit message for staged changes and directly commit them:
+   ```bash
+   bm c -y
+   ```
+
+3. Generate a commit message for all changes and copy it to the clipboard:
+   ```bash
+   bm c -m
+   ```
+
+4. Generate a commit message for all changes and directly commit them:
+   ```bash
+   bm c -m -y
+   ```
+
+---
+
+## Credits and Notes
+- **Author**: Bruno Marques (blmarquess)[@github](https://github.com/blmarquess)
+
+- **OpenAI Usage**: An active OpenAI account with credits is required to use the API. For more information, visit the [OpenAI API page](https://platform.openai.com/account/api-keys).
+- **Development**: This tool is designed to streamline specific tasks in the development workflow and can be customized as needed.
