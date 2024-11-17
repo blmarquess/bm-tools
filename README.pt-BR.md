@@ -72,14 +72,12 @@
 Certifique-se de adicionar as variáveis de ambiente ao seu sistema. Exemplo em um arquivo `.env`:
 
 ```plaintext
-OPENAI_API_ORG_ID=your_openai_org_id
-OPENAI_API_PROJECT_ID=your_openai_project_id
+OPENAI_API_KEY=your_openai_apy_key
 ```
 
 Ou configure diretamente no terminal:
 ```bash
-export OPENAI_API_ORG_ID=your_openai_org_id
-export OPENAI_API_PROJECT_ID=your_openai_project_id
+export OPENAI_API_KEY=your_openai_apy_key
 ```
 
 ---
