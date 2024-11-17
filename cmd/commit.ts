@@ -35,8 +35,7 @@ export async function commit({ exec = false, type = 'single' }: commitProps): Pr
     messages: [{ role: 'user', content: PROMPT }],
     temperature: 0.2,
   })
-  const responseText = JSON.stringify(llmResponse, null, 2)
-  console.log('🚀 ~ commit ~ llmResponse:', responseText)
+
   if (isMultiCommit) {
     const commitMessage = await handleMultiCommit(llmResponse, exec)
     return commitMessage
@@ -67,7 +66,6 @@ async function handleMultiCommit(llmResponse: any, exec: boolean) {
   const commitMessage = unwrapAiResponse(llmResponse)
   const { success, data } = jsonSafeParse<PromptOutput<CommitAiOutput[]>>(commitMessage)
   clipboard.writeSync(JSON.stringify(commitMessage))
-  console.log('🚀 :: This response has clipboard:', commitMessage)
 
   if (!success) {
     console.log('🚧 Response:', commitMessage)
