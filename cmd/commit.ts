@@ -9,6 +9,7 @@ import {
 import clipboard from 'clipboardy'
 import { jsonSafeParse } from '../util'
 import type { CommitAiOutput, PromptOutput } from '../prompt/prompt-response'
+import { getGitDiffs } from '../util/get-git-diffs'
 
 export type commitProps = {
   exec: boolean
@@ -18,7 +19,7 @@ export type commitProps = {
 export async function commit({ exec = false, type = 'single' }: commitProps): Promise<string> {
   const isMultiCommit = type === 'multi'
   const ADD_FILE_CHANGES_DIFF = 'Please stage your changes before generating a commit message.'
-  const stagedDiff = isMultiCommit ? await $`git diff`.text() : await $`git diff --cached`.text()
+  const stagedDiff = await getGitDiffs(isMultiCommit)
 
   if (!stagedDiff.trim()?.length) {
     console.log(`❗❗❗ ${ADD_FILE_CHANGES_DIFF}❗❗❗`)
@@ -81,19 +82,4 @@ async function handleMultiCommit(llmResponse: any, exec: boolean) {
     }
   }
   return commitMessage
-}
-
-function fixJsonString(input: string) {
-  return input.replace('```json', '').replace('```', '').replace(/'/g, '"')
-}
-
-function safeJsonParse<T>(input: string): T | undefined {
-  try {
-    const str = input.replace('```json', '').replace('```', '')
-    const jsonValue: T = JSON.parse(str)
-
-    return jsonValue
-  } catch {
-    return undefined
-  }
 }
