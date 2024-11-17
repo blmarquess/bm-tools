@@ -18,8 +18,7 @@
 
 2. **Variáveis de Ambiente Obrigatórias**:
    Para usar a integração com o OpenAI, configure as seguintes variáveis de ambiente:
-   - `OPENAI_API_ORG_ID`: Seu ID de organização OpenAI.
-   - `OPENAI_API_PROJECT_ID`: Seu ID de projeto OpenAI.
+   - `OPENAI_API_KEY`: Sua chave de api da OpenAI.
 
    Você pode encontrar essas informações em [OpenAI API Keys](https://platform.openai.com/account/api-keys).
 
