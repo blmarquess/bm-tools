@@ -2,6 +2,9 @@
   "name": "bm-cli",
   "module": "index.ts",
   "type": "module",
+  "version": "0.0.1",
+  "description": "A CLI tool for generating boilerplate code for various programming languages and frameworks.",
+  "author": "Bruno Marques<blmarques.dev@gmail.com>",
   "bin": {
     "bm": "./index.ts"
   },
