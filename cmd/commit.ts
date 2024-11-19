@@ -1,4 +1,5 @@
 import { $ } from 'bun'
+import chalk from 'chalk'
 import { OpenAiInstance, unwrapAiResponse } from '../helper'
 import {
   COMMIT_PROMPT_TEMPLATE,
@@ -16,13 +17,15 @@ export type commitProps = {
   type?: 'single' | 'multi'
 }
 
+// const chalk = new Chalk({level: 2});
+
 export async function commit({ exec = false, type = 'single' }: commitProps): Promise<string> {
   const isMultiCommit = type === 'multi'
   const ADD_FILE_CHANGES_DIFF = 'Please stage your changes before generating a commit message.'
   const stagedDiff = await getGitDiffs(isMultiCommit)
 
   if (!stagedDiff.trim()?.length) {
-    console.log(`❗❗❗ ${ADD_FILE_CHANGES_DIFF}❗❗❗`)
+    console.log(`❗❗❗ ${chalk.bold.white(ADD_FILE_CHANGES_DIFF)}❗❗❗`)
     return ADD_FILE_CHANGES_DIFF
   }
 
@@ -53,11 +56,11 @@ async function handleSingleCommit(llmResponse: any, exec: boolean) {
 
   if (exec) {
     const apply = await $`git commit -m "${commitMessage}"`.text()
-    console.log('🚀 ~ commit ~ apply:', apply)
+    console.log(chalk.greenBright('🚀 ~ commit ~ apply:'), apply)
     return apply
   }
 
-  console.log('🚀 :: This message has copy to clipboard:', commitMessage)
+  console.log(chalk.blue('🚀 :: This message has copy to clipboard:'), chalk.yellow(commitMessage))
   clipboard.writeSync(commitMessage)
   return commitMessage
 }
@@ -68,7 +71,7 @@ async function handleMultiCommit(llmResponse: any, exec: boolean) {
   clipboard.writeSync(JSON.stringify(commitMessage))
 
   if (!success) {
-    console.log('🚧 Response:', commitMessage)
+    console.log(chalk.red('🚧 Response:'), commitMessage)
     return COMMIT_RESPONSE_ROLE_ERROR
   }
 
@@ -76,7 +79,7 @@ async function handleMultiCommit(llmResponse: any, exec: boolean) {
     for await (const { files, message } of data) {
       await $`git add ${files}"`
       const apply = await $`git commit -m "${message}"`.text()
-      console.log('🚀 ~ GIT::commit', apply)
+      console.log(chalk.green('🚀 ~ GIT::commit'), apply)
     }
   }
   return commitMessage
