@@ -11,13 +11,13 @@ import clipboard from 'clipboardy'
 import { jsonSafeParse } from '../util'
 import type { CommitAiOutput, PromptOutput } from '../prompt/prompt-response'
 import { getGitDiffs } from '../util/get-git-diffs'
+import { EXEC_COMMIT_QUESTION, HAS_COPY_TO_CLIPBOARD } from '../constants'
+import { askQuestion } from '../util/ask-question'
 
 export type commitProps = {
   exec: boolean
   type?: 'single' | 'multi'
 }
-
-// const chalk = new Chalk({level: 2});
 
 export async function commit({ exec = false, type = 'single' }: commitProps): Promise<string> {
   const isMultiCommit = type === 'multi'
@@ -47,25 +47,30 @@ export async function commit({ exec = false, type = 'single' }: commitProps): Pr
   return commitMessage
 }
 
-async function handleSingleCommit(llmResponse: any, exec: boolean) {
+async function handleSingleCommit(llmResponse: any, exec: boolean = false) {
   const commitMessage = unwrapAiResponse(llmResponse)
-
   if (!commitMessage || commitMessage === COMMIT_RESPONSE_ROLE_ERROR) {
     return COMMIT_RESPONSE_ROLE_ERROR
   }
+  let doIt
 
-  if (exec) {
+  if (!exec) {
+    console.log(chalk.blue('COMMIT:'), chalk.yellow(commitMessage))
+    doIt = await askQuestion(EXEC_COMMIT_QUESTION)
+  }
+
+  if (exec || doIt) {
     const apply = await $`git commit -m "${commitMessage}"`.text()
     console.log(chalk.greenBright('🚀 ~ commit ~ apply:'), apply)
     return apply
   }
 
-  console.log(chalk.blue('🚀 :: This message has copy to clipboard:'), chalk.yellow(commitMessage))
+  console.log(chalk.blue(HAS_COPY_TO_CLIPBOARD), chalk.yellow(commitMessage))
   clipboard.writeSync(commitMessage)
   return commitMessage
 }
 
-async function handleMultiCommit(llmResponse: any, exec: boolean) {
+async function handleMultiCommit(llmResponse: any, exec: boolean = false) {
   const commitMessage = unwrapAiResponse(llmResponse)
   const { success, data } = jsonSafeParse<PromptOutput<CommitAiOutput[]>>(commitMessage)
   clipboard.writeSync(JSON.stringify(commitMessage))
@@ -74,13 +79,20 @@ async function handleMultiCommit(llmResponse: any, exec: boolean) {
     console.log(chalk.red('🚧 Response:'), commitMessage)
     return COMMIT_RESPONSE_ROLE_ERROR
   }
+  let doIt
 
-  if (exec) {
+  if (!exec) {
+    console.log(chalk.blue('COMMITS:\n'), chalk.yellow(commitMessage))
+    doIt = await askQuestion(EXEC_COMMIT_QUESTION)
+  }
+
+  if (exec || doIt) {
     for await (const { files, message } of data) {
       await $`git add ${files}"`
       const apply = await $`git commit -m "${message}"`.text()
       console.log(chalk.green('🚀 ~ GIT::commit'), apply)
     }
   }
+  console.log(chalk.blue(HAS_COPY_TO_CLIPBOARD), chalk.yellow(commitMessage))
   return commitMessage
 }
